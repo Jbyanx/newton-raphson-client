@@ -10,8 +10,16 @@ const MATH_EXPR_REGEX = /^[a-zA-Z0-9\s\+\-\*\^\/\.\(\)]+$/
  * @param {FormData} formData
  * @returns {Record<string, string>} errors — empty object if all valid
  */
+const sanitize = (str) => str
+  .replace(/²/g, '^2')
+  .replace(/³/g, '^3')
+  .replace(/¹/g, '^1')
+  .trim()
+
 function validateForm(formData) {
-  const { eq1, eq2, var1, var2, guess1, guess2, maxIterations, tolerance } = formData
+  const { var1, var2, guess1, guess2, maxIterations, tolerance } = formData
+  const eq1 = sanitize(formData.eq1)
+  const eq2 = sanitize(formData.eq2)
   const errors = {}
 
   // ── Variables ──────────────────────────────────────────────
@@ -117,7 +125,7 @@ export function useSolver() {
     setResult(null)
 
     const payload = {
-      equations:      [formData.eq1.trim(), formData.eq2.trim()],
+      equations:      [sanitize(formData.eq1), sanitize(formData.eq2)],
       variables:      [formData.var1.trim(), formData.var2.trim()],
       initialGuess:   [Number(formData.guess1), Number(formData.guess2)],
       maxIterations:  parseInt(formData.maxIterations, 10),

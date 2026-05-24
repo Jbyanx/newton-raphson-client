@@ -20,6 +20,12 @@ function errorBadgeStyle(error) {
   return { bg: 'var(--color-success-bg)', border: 'var(--color-success-border)', color: 'var(--color-success)' }
 }
 
+const formatError = (error) => {
+  if (error >= 1) return error.toFixed(4)
+  if (error >= 1e-4) return error.toExponential(2)
+  return error.toExponential(3)
+}
+
 function SubLabel({ children }) {
   return <p style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{children}</p>
 }
@@ -75,7 +81,7 @@ export default function IterationCard({ step, variables, index, isLast }) {
           fontFamily: 'var(--font-mono)',
           fontWeight: 500,
         }}>
-          error = {(step.error ?? 0).toExponential(3)}
+          error = {formatError(step.error ?? 0)}
         </span>
       </div>
 
